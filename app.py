@@ -18,6 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 from models import db
 migrate = Migrate(app, db)
 
+
 from models import (
     User,
     Form,
