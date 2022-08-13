@@ -1,3 +1,4 @@
+import re
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -44,6 +45,12 @@ migrate = Migrate(app, db)
 def index():
     return 'Hey the app is running!'
 
+@app.route('/test')
+def test():
+    from plugins.googlesheet.sheet import sheet
+    print(sheet)
+    return 'test successfull'
+
 @app.route('/test_db')
 def test_db():
     try:
@@ -82,12 +89,14 @@ from collect.routes import (
     create_new_response,
     get_user_response,
     get_all_responses,
+    get_response_in_google_sheet,
 )
 docs.register(get_all_forms)
 docs.register(get_complete_form)
 docs.register(create_new_response)
 docs.register(get_user_response)
 docs.register(get_all_responses)
+docs.register(get_response_in_google_sheet)
 
 
 

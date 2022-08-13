@@ -21,7 +21,24 @@ services:
       - ./.env.dev
     depends_on:
       - db
+  
+  minio:
+    image: minio/minio
+    hostname: minio
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=minio123
+      - MINIO_LISTEN_PORT=9000
+      - MINIO_BROWSER=on
+    ports:
+      - 9000:9000
+    command: server --console-address ":9001" /data
+    depends_on:
+      - db
 
 
 volumes:
   postgres_data:
+  minio_data:

@@ -4,6 +4,7 @@ from flask_apispec import use_kwargs, marshal_with
 from auth.utils import token_required
 from app import app
 from .utils import get_form_response, get_all_response
+from plugins.googlesheet import GS
 
 @app.route('/form/get_all_forms', methods=['GET'])
 @token_required
@@ -94,3 +95,31 @@ def get_all_responses(form_id, **kwargs):
     except Exception as e:
         print(e)
         return {'message': 'Something Went Wrong!'}, 500
+
+@app.route('/form/get_response_in_google_sheet/<int:form_id>', methods=['GET'])
+@token_required
+def get_response_in_google_sheet(form_id, **kwargs):
+    try:
+        form=db.session.query(Form).filter_by(id=form_id, user_id=kwargs['user'].id).first()
+        if form:
+            gs=GS()
+            if gs.service:
+                gsheet=gs.create_sheet(form.name)
+                fields=db.session.query(Field).filter_by(form_id=form_id).all()
+                field_names=([field.question for field in fields])
+                values=[]
+                values.append(field_names)
+                for resp in db.session.query(Response).filter_by(form_id=form_id).all():
+                    response=[]
+                    for field in fields:
+                        response.append(db.session.query(ResponseData).filter_by(response_id=resp.id, field_id=field.id).first().value)
+                    values.append(response)
+                gs.update_spreadsheet(gsheet['spreadsheetId'], values,'A1')
+                return {'message': 'GoogleSheet Created', 'data': gsheet['spreadsheetUrl']}, 200
+            return {'message': 'Error occured while creating sheet '}, 500
+        return {'message': 'Form not found'}, 404
+    except Exception as e:
+        print(e)
+        return {'message': 'Something Went Wrong!'}, 500
+
+
