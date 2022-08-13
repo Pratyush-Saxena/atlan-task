@@ -1,4 +1,4 @@
-*_.py
-!__init__.py
+versions/
+!.gitkeep
 __pycache__
 venv
