@@ -9,13 +9,13 @@ db=SQLAlchemy(app)
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    # name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
 
-    def __init__(self, name, email, password):
-        self.name = name
+    def __init__(self,  email, password):
+        # self.name = name
         self.email = email
         self.password = password
 
@@ -28,12 +28,21 @@ class Form(db.Model):
     name = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     published = db.Column(db.Boolean,default=False)
-    author = db.Column(db.Integer, db.ForeignKey('users.id',ondelete='SET NULL'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id',ondelete='SET NULL'), nullable=True)
 
-    def __init__(self, name, author, published=False):
+    def __init__(self, name, user_id, published=False):
         self.name = name
-        self.author = author
+        self.user_id = user_id
         self.published = published
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'created_at': self.created_at,
+            'published': self.published,
+            'user_id': self.user_id
+        }
 
 
 
@@ -62,6 +71,18 @@ class Field(db.Model):
         self.options = options
         self.form_id = form_id
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'question': self.question,
+            'type': self.type,
+            'mandate': self.mandate,
+            'upper_limit': self.upper_limit,
+            'lower_limit': self.lower_limit,
+            'options': self.options,
+        }
 
 
 class Response(db.Model):
@@ -75,6 +96,14 @@ class Response(db.Model):
         self.form_id = form_id
         self.user_id = user_id
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'form_id': self.form_id,
+            'user_id': self.user_id,
+            'created_at': self.created_at
+        }
+
 class ResponseData(db.Model):
     __tablename__ = 'responsedata'
     id = db.Column(db.Integer, primary_key=True)
@@ -86,4 +115,9 @@ class ResponseData(db.Model):
         self.response_id = response_id
         self.field_id = field_id
         self.value = value
+    
+    def serialize(self):
+        return {
+            'value': self.value
+        }
 
