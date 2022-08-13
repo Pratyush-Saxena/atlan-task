@@ -19,9 +19,8 @@ api = Api(app)
 docs = FlaskApiSpec(app)
 
 
-
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(os.environ["APP_SETTINGS"])
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config.update(
     {
         "APISPEC_SPEC": APISpec(
@@ -34,40 +33,46 @@ app.config.update(
         "APISPEC_SWAGGER_UI_URL": "/swagger-ui/",  # URI to access UI of API Doc
     }
 )
-app.config['SECRET_KEY'] = 'U19*nk12JGBjskHjd4sdfkgsdhkvkhgFlhjdsGlhwUEWV&^(7fsdfds='
+app.config["SECRET_KEY"] = "U19*nk12JGBjskHjd4sdfkgsdhkvkhgFlhjdsGlhwUEWV&^(7fsdfds="
 
 
 from models import db
+
 migrate = Migrate(app, db)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return 'Hey the app is running!'
+    return "Hey the app is running!"
 
-@app.route('/test')
+
+@app.route("/test")
 def test():
     from plugins.googlesheet.sheet import sheet
-    print(sheet)
-    return 'test successfull'
 
-@app.route('/test_db')
+    print(sheet)
+    return "test successfull"
+
+
+@app.route("/test_db")
 def test_db():
     try:
-        resp=db.session.query(func.current_timestamp()).all()[0]
-        s=''
+        resp = db.session.query(func.current_timestamp()).all()[0]
+        s = ""
         for e in resp:
-            s+=str(e)
+            s += str(e)
         return s
     except Exception as e:
-        return(str(e))
+        return str(e)
+
 
 from collect.user import UserResource
 from collect.forms import FormResource
 from collect.fields import FieldResource
-api.add_resource(UserResource, '/User')
-api.add_resource(FormResource, '/Forms')
-api.add_resource(FieldResource, '/Forms/Field')
+
+api.add_resource(UserResource, "/User")
+api.add_resource(FormResource, "/Forms")
+api.add_resource(FieldResource, "/Forms/Field")
 
 
 docs.register(UserResource)
@@ -79,6 +84,7 @@ from auth.routes import (
     token_verify,
     refresh_token,
 )
+
 docs.register(login)
 docs.register(token_verify)
 docs.register(refresh_token)
@@ -91,6 +97,7 @@ from collect.routes import (
     get_all_responses,
     get_response_in_google_sheet,
 )
+
 docs.register(get_all_forms)
 docs.register(get_complete_form)
 docs.register(create_new_response)
@@ -99,6 +106,5 @@ docs.register(get_all_responses)
 docs.register(get_response_in_google_sheet)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
