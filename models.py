@@ -29,6 +29,7 @@ class Form(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     published = db.Column(db.Boolean,default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id',ondelete='SET NULL'), nullable=True)
+    gsheet_id = db.Column(db.String, nullable=True) 
 
     def __init__(self, name, user_id, published=False):
         self.name = name

@@ -104,7 +104,12 @@ def get_response_in_google_sheet(form_id, **kwargs):
         if form:
             gs=GS()
             if gs.service:
-                gsheet=gs.create_sheet(form.name)
+                if form.gsheet_id:
+                    gsheet=gs.get_sheet(form.gsheet_id)
+                else:
+                    gsheet=gs.create_sheet(form.name)
+                    form.gsheet_id=gsheet['spreadsheetId']
+                    db.session.commit()
                 fields=db.session.query(Field).filter_by(form_id=form_id).all()
                 field_names=([field.question for field in fields])
                 values=[]
