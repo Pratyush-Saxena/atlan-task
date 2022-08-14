@@ -5,9 +5,9 @@ services:
     image: postgres:13-alpine
     hostname: db
     volumes:
-      - type:volume
-          source:postgres_data
-          target:/var/lib/postgresql/data/
+#       - type:volume
+#           source:postgres_data
+        - /var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin123
@@ -41,6 +41,4 @@ services:
 #       - db
 
 
-volumes:
-  postgres_data:
 #   minio_data:
