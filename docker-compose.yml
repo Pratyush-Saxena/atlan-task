@@ -1,5 +1,14 @@
 version: '3.3'
 
+x-uffizzi:
+  ingress:    # required
+    service: loadbalancer
+    port: 8080
+  continuous_previews:
+    deploy_preview_when_pull_request_is_opened: true
+    delete_preview_when_pull_request_is_closed: true
+    share_to_github: true
+
 services:
   db:
     image: postgres:13-alpine
@@ -23,6 +32,14 @@ services:
       - ./.env.dev
     depends_on:
       - db
+  loadbalancer:
+    image: nginx:latest
+    configs:
+      - source: nginx-vote-conf
+        target: /etc/nginx/conf.d/vote.conf
+configs:
+  nginx-vote-conf:
+    file: ./vote.conf   
   
 #   minio:
 #     image: minio/minio
