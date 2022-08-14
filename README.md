@@ -17,10 +17,10 @@ The above image shows the schematic approach of implementation.So as we can see 
   <li> mandate - if the feild is mandatory or not</li>
   <li> upper_ limit and lower_limit - to add constraint to the input</li>
  </ul>
- and many more which can be check at the time of response submisson.
+ and many more which can be used to validate response.
 </li>
 
-<li> APIs-
+<li> <b> APIs- </b>
 </li>
 
 ![127 0 0 1_5000_swagger-ui_](https://user-images.githubusercontent.com/52444607/184526244-d39f054e-11e2-4d23-a19c-da7214372b74.png)
