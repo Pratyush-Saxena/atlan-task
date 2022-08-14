@@ -37,9 +37,7 @@ services:
     configs:
       - source: nginx-vote-conf
         target: /etc/nginx/conf.d/vote.conf
-configs:
-  nginx-vote-conf:
-    file: ./vote.conf   
+ 
   
 #   minio:
 #     image: minio/minio
