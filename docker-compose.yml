@@ -34,9 +34,9 @@ services:
       - db
   loadbalancer:
     image: nginx:latest
-    configs:
-      - source: nginx-vote-conf
-        target: /etc/nginx/conf.d/vote.conf
+#     configs:
+#       - source: nginx-vote-conf
+#         target: /etc/nginx/conf.d/vote.conf
  
   
 #   minio:
